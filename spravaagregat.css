@@ -1,7 +1,28 @@
+/* Základní styl pro stránku */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     margin: 20px;
+}
+
+/* Nastavení světle modrého pozadí pro celou stránku */
+body {
+    background-color: #ADD8E6; /* Světle modrá barva */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    border: 1px solid black;
+    background: grey;
+    margin: auto;
+    padding: 50px auto; 
+}
+
+h2 {
+    border: 1px solid black;
+    background: green;
 }
 
 button {
@@ -15,13 +36,13 @@ ul {
 }
 
 li {
-    margin: 5px;
+    background-color: #FFCCCC; /* Světle červené pozadí */
+    border: 1px solid #FF0000; /* Červené ohraničení */
     padding: 10px;
-    border: 1px solid #ccc;
+    margin: 5px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; /* Zajistí, že se tlačítka přizpůsobí šířce */
 }
 
 .button-container {
@@ -30,7 +51,23 @@ li {
 }
 
 button {
+    margin-left: 5px;
     padding: 5px 10px;
-    cursor: pointer;
 }
 
+/* Skrýt sekci pro přidání/úpravu agregátu při tisku */
+@media print {
+    #pridatUpravitSection {
+        display: none;
+    }
+
+    /* Skrytí tlačítka pro tisk při tisku */
+    #printButton {
+        display: none;
+    }
+
+    /* Skrytí tlačítek pro úpravy, smazání, doplnění paliva a kontroly při tisku */
+    .button-container {
+        display: none;
+    }
+}

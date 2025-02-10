@@ -20,13 +20,27 @@
 
     <!-- Sekce pro správu agregátů -->
     <div id="adminPanel" style="display: none;">
-        <h2>Přidat / Upravit agregát</h2>
+        <h2 id="pridatUpravitSection">Přidat / Upravit agregát</h2>
         <input type="text" id="nazev" placeholder="Název">
         <input type="text" id="umisteni" placeholder="Umístěno">
         <button id="pridat">Uložit</button>
 
         <h2>Seznam agregátů</h2>
         <ul id="seznam"></ul>
+    </div>
+
+    <!-- Sekce pro zadání motohodin při doplnění paliva -->
+    <div id="doplnitMotohodinySection" style="display:none;">
+        <h3>Doplnění paliva a zadání motohodin</h3>
+        <input type="number" id="motohodinyDoplnit" placeholder="Počet motohodin">
+        <button id="doplnitPalivoButton">Uložit doplnění paliva</button>
+    </div>
+
+    <!-- Sekce pro zadání motohodin při kontrole -->
+    <div id="kontrolaMotohodinySection" style="display:none;">
+        <h3>Záznam kontroly a motohodin</h3>
+        <input type="number" id="motohodinyKontrola" placeholder="Počet motohodin">
+        <button id="kontrolaButton">Uložit kontrolu</button>
     </div>
 
     <script src="sparavaagregatu.js"></script>

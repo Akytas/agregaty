@@ -40,7 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     posledniPalivo: agregaty[upravovanyIndex].posledniPalivo || "N/A",
                     posledniKontrola: agregaty[upravovanyIndex].posledniKontrola || "N/A",
                     doplnil: agregaty[upravovanyIndex].doplnil || "?",
-                    kontroloval: agregaty[upravovanyIndex].kontroloval || "?"
+                    kontroloval: agregaty[upravovanyIndex].kontroloval || "?",
+                    motohodiny: agregaty[upravovanyIndex].motohodiny || "N/A"
                 };
                 upravovanyIndex = null; // Reset indexu pro úpravy
             } else {
@@ -51,7 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     posledniPalivo: "N/A", 
                     posledniKontrola: "N/A",
                     doplnil: "?",
-                    kontroloval: "?"
+                    kontroloval: "?",
+                    motohodiny: "N/A"
                 });
             }
 
@@ -70,10 +72,25 @@ document.addEventListener("DOMContentLoaded", () => {
         agregaty.forEach((agregat, index) => {
             const li = document.createElement("li");
 
+            // Výpočet barvy pozadí na základě data poslední kontroly
+            let backgroundColor = "#FFCCCC";  // Výchozí barva - červená
+            const dnes = new Date();
+            const posledniKontrola = new Date(agregat.posledniKontrola);
+            const rozdilDni = (dnes - posledniKontrola) / (1000 * 3600 * 24); // Vypočítání rozdílu v dnech
+
+            if (agregat.posledniKontrola !== "N/A") {
+                if (rozdilDni <= 30) {
+                    backgroundColor = "#90EE90";  // Světle zelená, pokud je kontrola provedena během posledních 30 dní
+                } else {
+                    backgroundColor = "#FF6347";  // Oranžová, pokud je kontrola starší než 30 dní
+                }
+            }
+
             li.innerHTML = `
                 <span><strong>${agregat.nazev}</strong> - Umístěno: ${agregat.umisteni} | 
                 Poslední doplnění paliva: ${agregat.posledniPalivo} (${agregat.doplnil}) | 
-                Poslední kontrola: ${agregat.posledniKontrola} (${agregat.kontroloval})</span>
+                Poslední kontrola: ${agregat.posledniKontrola} (${agregat.kontroloval}) | 
+                Motohodiny: ${agregat.motohodiny}</span>
                 <div class="button-container">
                     <button class="edit" onclick="upravAgregat(${index})">✏️ Upravit</button>
                     <button class="delete" onclick="smazAgregat(${index})">🗑️ Smazat</button>
@@ -82,6 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `;
 
+            li.style.backgroundColor = backgroundColor;  // Nastavení barvy pozadí
             seznam.appendChild(li);
         });
     }
@@ -115,28 +133,32 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Záznam kontroly + záznam osoby
+    // Záznam kontroly + záznam motohodin a osoby
     window.zaznamenatKontrolu = function(index) {
         let agregaty = JSON.parse(localStorage.getItem("agregaty")) || [];
-        let inicialy = prompt("Zadejte své iniciály:");
+        let motohodiny = prompt("Zadejte počet motohodin:");
+        if (motohodiny) {
+            let inicialy = prompt("Zadejte své iniciály:");
+            if (inicialy) {
+                agregaty[index].posledniKontrola = new Date().toLocaleDateString();
+                agregaty[index].kontroloval = inicialy;
+                agregaty[index].motohodiny = motohodiny;  // Uložíme motohodiny
 
-        if (inicialy) {
-            agregaty[index].posledniKontrola = new Date().toLocaleDateString();
-            agregaty[index].kontroloval = inicialy;
-            localStorage.setItem("agregaty", JSON.stringify(agregaty));
-            zobrazSeznam();
+                localStorage.setItem("agregaty", JSON.stringify(agregaty));
+                zobrazSeznam();
+            }
         }
     };
 
-    // Aktualizace UI podle přihlášení
+    // Aktualizace UI podle stavu přihlášení
     function aktualizovatUI() {
         const isAdmin = localStorage.getItem("isAdmin") === "true";
-        adminPanel.style.display = isAdmin ? "block" : "none";
         loginButton.style.display = isAdmin ? "none" : "block";
         logoutButton.style.display = isAdmin ? "block" : "none";
-        document.getElementById("loginForm").style.display = isAdmin ? "none" : "block";
+        adminPanel.style.display = isAdmin ? "block" : "none";
         zobrazSeznam();
     }
 
+    // Inicializace
     aktualizovatUI();
 });
