@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const pridatButton = document.getElementById("pridat");
     const seznam = document.getElementById("seznam");
     const passwordInput = document.getElementById("password");
+    const loginForm = document.getElementById("loginForm");
+    const printButton = document.getElementById("printButton");
 
     let upravovanyIndex = null;
 
@@ -72,18 +74,15 @@ document.addEventListener("DOMContentLoaded", () => {
         agregaty.forEach((agregat, index) => {
             const li = document.createElement("li");
 
-            // Výpočet barvy pozadí na základě data poslední kontroly
-            let backgroundColor = "#FFCCCC";  // Výchozí barva - červená
-            const dnes = new Date();
-            const posledniKontrola = new Date(agregat.posledniKontrola);
-            const rozdilDni = (dnes - posledniKontrola) / (1000 * 3600 * 24); // Vypočítání rozdílu v dnech
+            // Výpočet barvy pozadí podle data poslední kontroly
+            let kontrolaDate = new Date(agregat.posledniKontrola);
+            let today = new Date();
+            let timeDiff = today - kontrolaDate;
+            let daysDiff = timeDiff / (1000 * 3600 * 24);
+            let backgroundColor = "#FFCCCC"; // Výchozí červená barva
 
-            if (agregat.posledniKontrola !== "N/A") {
-                if (rozdilDni <= 30) {
-                    backgroundColor = "#90EE90";  // Světle zelená, pokud je kontrola provedena během posledních 30 dní
-                } else {
-                    backgroundColor = "#FF6347";  // Oranžová, pokud je kontrola starší než 30 dní
-                }
+            if (daysDiff <= 30 && agregat.posledniKontrola !== "N/A") {
+                backgroundColor = "#90EE90"; // Světle zelená, pokud kontrola byla do 30 dnů
             }
 
             li.innerHTML = `
@@ -98,8 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <button class="check" onclick="zaznamenatKontrolu(${index})">✅ Kontrola</button>
                 </div>
             `;
-
-            li.style.backgroundColor = backgroundColor;  // Nastavení barvy pozadí
+            li.style.backgroundColor = backgroundColor; // Nastavení barvy pozadí
             seznam.appendChild(li);
         });
     }
@@ -133,32 +131,40 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Záznam kontroly + záznam motohodin a osoby
+    // Záznam kontroly + záznam osoby a motohodin
     window.zaznamenatKontrolu = function(index) {
         let agregaty = JSON.parse(localStorage.getItem("agregaty")) || [];
         let motohodiny = prompt("Zadejte počet motohodin:");
+
         if (motohodiny) {
             let inicialy = prompt("Zadejte své iniciály:");
+
             if (inicialy) {
                 agregaty[index].posledniKontrola = new Date().toLocaleDateString();
                 agregaty[index].kontroloval = inicialy;
-                agregaty[index].motohodiny = motohodiny;  // Uložíme motohodiny
-
+                agregaty[index].motohodiny = motohodiny;
                 localStorage.setItem("agregaty", JSON.stringify(agregaty));
                 zobrazSeznam();
             }
         }
     };
 
-    // Aktualizace UI podle stavu přihlášení
+    // Funkce pro tisk
+    if (printButton) {
+        printButton.addEventListener('click', function() {
+            window.print();  // Tato funkce vyvolá tiskový dialog
+        });
+    }
+
+    // Aktualizace UI podle přihlášení
     function aktualizovatUI() {
         const isAdmin = localStorage.getItem("isAdmin") === "true";
+        adminPanel.style.display = isAdmin ? "block" : "none";
         loginButton.style.display = isAdmin ? "none" : "block";
         logoutButton.style.display = isAdmin ? "block" : "none";
-        adminPanel.style.display = isAdmin ? "block" : "none";
+        loginForm.style.display = isAdmin ? "none" : "block";
         zobrazSeznam();
     }
 
-    // Inicializace
     aktualizovatUI();
 });

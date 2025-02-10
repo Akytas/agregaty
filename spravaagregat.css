@@ -12,6 +12,20 @@ body {
     margin: 0;
     padding: 0;
 }
+/* Skrytí pole pro zadání hesla po přihlášení */
+#loginForm {
+    display: none;
+}
+.logo-container {
+    text-align: center;  /* Zarovná obsah do středu */
+    margin-top: 20px;    /* Volitelný prostor mezi nadpisem a logem */
+}
+
+.logo {
+    max-width: 10%;     /* Umožní, aby logo bylo responzivní */
+    height: auto;        /* Zachová proporce loga */
+}
+
 
 h1 {
     border: 1px solid black;
@@ -67,6 +81,61 @@ button {
     }
 
     /* Skrytí tlačítek pro úpravy, smazání, doplnění paliva a kontroly při tisku */
+    .button-container {
+        display: none;
+    }
+}
+/* Skrýt sekci pro přihlášení, tlačítko odhlášení a formulář pro přidání/úpravu agregátu při tisku */
+@media print {
+    #loginForm,
+    #nazev,
+    #umisteni,
+    #pridat,
+    #logoutButton,
+    #printButton {
+        display: none !important;
+    }
+
+    /* Skrytí tlačítek pro úpravy, smazání, doplnění paliva a kontroly při tisku */
+    .button-container {
+        display: none;
+    }
+}
+@media print {
+    .logo-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .logo {
+        max-width: 100%;  /* Zajistí, že logo nebude příliš velké */
+        height: auto;
+    }
+}
+@media print {
+    .logo-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .logo {
+        max-width: 10%;  /* Zajistí, že logo bude mít maximálně 10% šířky */
+        height: auto;
+       
+        
+    }
+
+    /* Skrýt ostatní sekce při tisku */
+    #pridatUpravitSection,
+    #loginForm,
+    #nazev,
+    #umisteni,
+    #pridat,
+    #logoutButton,
+    #printButton {
+        display: none !important;
+    }
+
     .button-container {
         display: none;
     }
