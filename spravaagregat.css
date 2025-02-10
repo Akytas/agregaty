@@ -1,0 +1,36 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+}
+
+button {
+    margin: 5px;
+    padding: 10px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Zajistí, že se tlačítka přizpůsobí šířce */
+}
+
+.button-container {
+    display: flex;
+    gap: 5px; /* Mezera mezi tlačítky */
+}
+
+button {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
